@@ -430,7 +430,7 @@ public class CityRescueImpl implements CityRescue {
 
         for (int i = 0; i < MAX_INCIDENTS; i++) {
             Incident incident = incidents[i];
-            if (incident == null) continue;
+            if (incident == null || incident.getIncidentStatus() == IncidentStatus.REPORTED) continue;
             Unit unit = incident.getAssignedUnit();
             if ((unit.getWorkRemaining() <= 0) && (unit.getStatus() == UnitStatus.AT_SCENE)) {
                         unit.release();
