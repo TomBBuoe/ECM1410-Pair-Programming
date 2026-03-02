@@ -145,4 +145,6 @@ public abstract class Unit {
     public Incident getAssignedIncident() {return assignedIncident;}
     public int getWorkRemanining() {return workRemanining;}
 
+
 }
+
