@@ -134,10 +134,17 @@ public abstract class Unit {
         }
     }
 
-    //Update/set new positon (idk if needed, remove if not)
+    //Update/set new positon
     public void setPosition(int newX, int newY) {
         this.unitX = newX;
         this.unitY = newY;
+    }
+
+    //set new home station
+    public void newStation(int stationId, int stationX, int stationY) {
+        this.homeStationId = stationId;
+        this.homeStationX =  stationX;
+        this.homeStationY =  stationY;
     }
 
     //Getting methods
@@ -155,4 +162,5 @@ public abstract class Unit {
 
 
 }
+
 
