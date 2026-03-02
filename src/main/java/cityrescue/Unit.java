@@ -158,7 +158,7 @@ public abstract class Unit {
     public int getHomeStationY() {return homeStationY;}
     public UnitStatus getStatus() {return status;}
     public Incident getAssignedIncident() {return assignedIncident;}
-    public int getWorkRemanining() {return workRemanining;}
+    public int getWorkRemaining() {return workRemanining;}
 
 
 }
