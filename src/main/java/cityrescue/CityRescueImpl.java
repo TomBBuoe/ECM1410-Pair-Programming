@@ -132,21 +132,54 @@ public class CityRescueImpl implements CityRescue {
     // Archie
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
-        // TODO: implement
+        Station stationObj = stations[stationId - 1];
+        if (stationObj == null) throw new IDNotRecognisedException("Station ID not recognised");
+        if (stationObj.stationFull()) throw new IllegalStateException("Station is full");
+        if (type == null) throw new InvalidUnitException("Unit type invalid");
+        Unit unit;
+        switch (type) {
+            case AMBULANCE:
+                unit = new Ambulance(nextFreeUnitIndex,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
+                break;
+            case FIRE_ENGINE:
+                unit = new Fire_Engine(nextFreeUnitIndex,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
+                break;
+            case POLICE_CAR:
+                unit = new Police_Car(nextFreeUnitIndex,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
+                break;
+            default:
+                throw new InvalidUnitException("Unit type invalid");
+        }
+        units[nextFreeUnitIndex] = unit;
+        stationObj.addUnit(unit);
+        return nextFreeUnitIndex++;
     }
 
     // Archie
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
+        Unit unit = units[unitId - 1];
+        if (unit.getStatus() == UnitStatus.EN_ROUTE || unit.getStatus() == UnitStatus.AT_SCENE) throw new IllegalStateException("Unit is in illegal state for action");
+        Station station = stations[unit.getHomeStationId() - 1];
+        station.removeUnit(unit);
+        units[unitId - 1] = null;
     }
 
     // Archie
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
+        if (stations[newStationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
+        Unit unit = units[unitId - 1];
+        Station station = stations[newStationId - 1];
+        Station oldStation = stations[unit.getHomeStationId() - 1];
+        if (station.stationFull()) throw new IllegalStateException("Station full");
+        if (unit.getStatus() != UnitStatus.IDLE) throw new IllegalStateException("Unit is not idle");
+        oldStation.removeUnit(unit);
+        station.addUnit(unit);
+        unit.newStation(newStationId, station.getX(), station.getY());
+        unit.setPosition(station.getX(), station.getY());
     }
 
     // Archie
