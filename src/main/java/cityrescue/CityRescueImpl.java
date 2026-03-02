@@ -82,7 +82,15 @@ public class CityRescueImpl implements CityRescue {
     // Tom
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
-        
+        if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) {
+            throw new IDNotRecognisedException("Station ID not recognised");
+        }
+        else if (stations[stationId - 1].getUnitCount() != 0) {
+            throw new IllegalStateException("Station cannot be removed as it still owns units");
+        }
+        else {
+            stations[stationId - 1] = null;
+        }
     }
 
     // Tom
