@@ -152,21 +152,69 @@ public class CityRescueImpl implements CityRescue {
     // Archie
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) {
+            throw new IDNotRecognisedException("Unit ID not recognised");
+        }
+
+        Unit unit = units[unitId - 1];
+        if (outOfService){
+            if (unit.getStatus() == UnitStatus.IDLE) {
+                unit.outOfService(outOfService);
+            }
+            else {
+                throw new IllegalStateException("Illegal unit state: must be IDLE");
+            }
+        }
+        else {
+            if (unit.getStatus() == UnitStatus.OUT_OF_SERVICE) {
+                unit.outOfService(outOfService);
+            }
+            else {
+                throw new IllegalStateException("Illegal unit state: must be OUT_OF_SERVICE");
+            }
+        }
     }
 
     // Archie
     @Override
     public int[] getUnitIds() {
-        // TODO: implement CAN USE SAME LOGIC AS getIncidentIds()
-        throw new UnsupportedOperationException("Not implemented yet");
+        int totalUnits = 0;
+        for (Unit unit : units) {
+            if (unit != null) {
+                ++totalUnits;
+            } 
+        }
+
+        int[] foundUnitIds = new int[totalUnits];
+        int counter = 0; 
+        for (Unit unit : units) {
+            if (unit != null) {
+                foundUnitIds[counter++] = unit.getUnitId();
+            }
+        }
+        return foundUnitIds;
     }
 
     // Archie
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
+        if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) {
+            throw new IDNotRecognisedException("Unit ID not recognised");
+        }
+        Unit unit = units[unitId - 1]; 
+        String type = unit.getUnitType().name();
+        String home = Integer.toString(unit.getHomeStationId());
+        String xLoc = Integer.toString(unit.getUnitX());
+        String yLoc = Integer.toString(unit.getUnitY());
+        String status = unit.getStatus().name();
+        Incident incident = unit.getAssignedIncident();
+        String incidentId = "-";
+        if (incident != null) {
+            incidentId = Integer.toString(incident.getIncidentId());
+        }
+        String workTicks = Integer.toString(unit.getTicksAtScene());
 
+        return new String ("U#" + unitId + " TYPE=" + type + " HOME=" + home + " LOC=(" + xLoc + "," + yLoc + ") STATUS=" + status + " INCIDENT=" + incidentId + " WORK=" + workTicks);
     }
 
     @Override

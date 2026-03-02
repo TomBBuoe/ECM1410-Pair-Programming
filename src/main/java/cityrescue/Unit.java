@@ -50,6 +50,7 @@ public abstract class Unit {
         this.assignedIncident = null;
         this.status = UnitStatus.IDLE;
         this.workRemanining = 0;
+        this.ticksAtScene = 0;
     }
 
     //Distance to goal from current point
@@ -114,7 +115,14 @@ public abstract class Unit {
     public boolean workATick() {
         if (status != UnitStatus.AT_SCENE) return false;
         workRemanining--;
-        return workRemanining == 0;
+        if (workRemanining == 0) {
+            ticksAtScene = 0;
+            return true;
+        }
+        else {
+            ticksAtScene++;
+            return false;
+        }
     }
 
     //Put a unit out of service
