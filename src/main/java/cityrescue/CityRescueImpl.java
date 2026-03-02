@@ -1,7 +1,5 @@
 package cityrescue;
 
-import javax.naming.InvalidNameException;
-
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
 
@@ -66,11 +64,14 @@ public class CityRescueImpl implements CityRescue {
     // Tom
     @Override
     public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
-        if (name == null) {
+        if (name == null || name.trim() == null) {
             throw new InvalidNameException("Station name cannot be null");
         }
         else if (!cityMap.isLegalMove(x, y)) {
             throw new InvalidLocationException("Location of station invalid");
+        }
+        else if (nextFreeStationIndex >= MAX_STATIONS) {
+            throw new CapacityExceededException("Station capacity exceeded");
         }
         else {
             stations[nextFreeStationIndex] = new Station(nextFreeStationIndex + 1, name, x, y);
@@ -81,8 +82,7 @@ public class CityRescueImpl implements CityRescue {
     // Tom
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        
     }
 
     // Tom
