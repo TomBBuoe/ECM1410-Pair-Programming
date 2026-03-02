@@ -88,7 +88,7 @@ public abstract class Unit {
         for (int[] d : directions) {
             int newX = this.unitX + d[0];
             int newY = this.unitY + d[1];
-            if (map.isValidLocation(newX, newY)) {
+            if (map.isLegalLocation(newX, newY)) {
                 this.unitX = newX;
                 this.unitY = newY;
                 return;
@@ -147,3 +147,4 @@ public abstract class Unit {
 
 
 }
+
