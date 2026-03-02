@@ -2,6 +2,7 @@ package cityrescue;
 
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
+import cityrescue.UnitTypes.*;
 
 /**
  * CityRescueImpl (Starter)
@@ -132,33 +133,34 @@ public class CityRescueImpl implements CityRescue {
     // Archie
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
+        if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
         Station stationObj = stations[stationId - 1];
-        if (stationObj == null) throw new IDNotRecognisedException("Station ID not recognised");
         if (stationObj.stationFull()) throw new IllegalStateException("Station is full");
         if (type == null) throw new InvalidUnitException("Unit type invalid");
+        if (nextFreeUnitIndex >= MAX_UNITS) throw new CapacityExceededException("Unit capacity exceeded");
         Unit unit;
         switch (type) {
             case AMBULANCE:
-                unit = new Ambulance(nextFreeUnitIndex,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
+                unit = new Ambulance(nextFreeUnitIndex + 1,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
                 break;
             case FIRE_ENGINE:
-                unit = new Fire_Engine(nextFreeUnitIndex,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
+                unit = new FireEngine(nextFreeUnitIndex + 1,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
                 break;
             case POLICE_CAR:
-                unit = new Police_Car(nextFreeUnitIndex,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
+                unit = new PoliceCar(nextFreeUnitIndex + 1,  stationId, stationObj.getX(), stationObj.getY(), stationObj.getX(), stationObj.getY());
                 break;
             default:
                 throw new InvalidUnitException("Unit type invalid");
         }
         units[nextFreeUnitIndex] = unit;
         stationObj.addUnit(unit);
-        return nextFreeUnitIndex++;
+        return ++nextFreeUnitIndex;
     }
 
     // Archie
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
-        if (units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
+        if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
         Unit unit = units[unitId - 1];
         if (unit.getStatus() == UnitStatus.EN_ROUTE || unit.getStatus() == UnitStatus.AT_SCENE) throw new IllegalStateException("Unit is in illegal state for action");
         Station station = stations[unit.getHomeStationId() - 1];
@@ -360,9 +362,23 @@ public class CityRescueImpl implements CityRescue {
     // Both
     @Override
     public void dispatch() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
+        int[] incidentIds = getIncidentIds();
+        int[] unitIds = getUnitIds();
+
+        for (int incidentId : incidentIds) {
+            Incident incident = incidents[incidentId - 1];
+            if (incident.getIncidentStatus() == IncidentStatus.REPORTED) {
+                for (int unitId : unitIds) {
+                    Unit unit = units[unitId];
+                    if (unit.getStatus() == UnitStatus.IDLE && unit.canHandle(incident.getIncidentType())) {
+
+                    }
+                }
+            }
+        }
+
+
+        }
 
     // Both
     @Override

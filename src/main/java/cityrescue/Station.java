@@ -32,7 +32,7 @@ public class Station {
     }
 
     //Removes unit from station unit list
-    public void removeUnit(Unit oldUnit) throws InvalidUnitException {
+    public void removeUnit(Unit oldUnit) {
         int index = -1;
         for (int i = 0; i < unitCount; i++) {
             if (unitsList[i] == oldUnit) {
@@ -40,7 +40,6 @@ public class Station {
                 break;
             }
         }
-        if (index == -1) throw new InvalidUnitException("This unit is not part of this station");
 
         for (int i = index; i < unitCount - 1; i++) {
             unitsList[i] = unitsList[i + 1];
