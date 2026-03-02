@@ -13,6 +13,13 @@ public class CityRescueImpl implements CityRescue {
 
     // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
 
+    final int MAX_STATIONS = 20;
+    final int MAX_UNITS = 50;
+    final int MAX_INCIDENTS = 200;
+
+    private Incident[] incidents = new Incident[MAX_INCIDENTS];
+    private int nextFreeIncidentIndex = 0;
+
     private CityMap cityMap;
 
     @Override
@@ -112,14 +119,37 @@ public class CityRescueImpl implements CityRescue {
 
     @Override
     public int reportIncident(IncidentType type, int severity, int x, int y) throws InvalidSeverityException, InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        if (type == null) {
+            throw new IllegalArgumentException("Invalid type input");
+        }
+        else if (1 > severity || severity > 5) {
+            throw new InvalidSeverityException("Invalid severity input");
+        }
+        else if (!cityMap.isLegalMove(x, y)) {
+            throw new InvalidLocationException("Invalid location input");
+        }
+        else if (nextFreeIncidentIndex < MAX_INCIDENTS) {
+            throw new CapacityExceededException("Incident capacity exceeded");
+        }
+        else {
+        incidents[nextFreeIncidentIndex] = new Incident(nextFreeIncidentIndex + 1, type, severity, x, y);
+        return ++nextFreeIncidentIndex;
+        }
     }
 
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        Incident incident = incidents[incidentId - 1];
+        if (incident == null) {
+            throw new IDNotRecognisedException("Incident ID not recognised");
+        }
+        else if (incident.getIncidentStatus() != IncidentStatus.REPORTED && incident.getIncidentStatus() != IncidentStatus.DISPATCHED) {
+            throw new IllegalStateException("Incident state is illegal");
+        }
+        else {
+            // TODO: 
+        }
     }
 
     @Override
