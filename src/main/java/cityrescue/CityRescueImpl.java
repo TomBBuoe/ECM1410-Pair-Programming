@@ -12,33 +12,42 @@ import cityrescue.exceptions.*;
 public class CityRescueImpl implements CityRescue {
 
     // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
-    
+
+    private CityMap cityMap;
 
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
-        // TODO: implement
         if (width > 0 && height > 0) {
-
+            this.cityMap = new CityMap(width, height);
         }
-        throw new UnsupportedOperationException("Not implemented yet");
+        else {
+            throw new InvalidGridException("Input grid dimensions invalid");
+        }
     }
 
     @Override
     public int[] getGridSize() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new int[]{cityMap.getWidth(), cityMap.getHeight()};
     }
 
     @Override
     public void addObstacle(int x, int y) throws InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (cityMap.isValidLocation(x, y)) {
+            cityMap.blockCell(x, y);
+        }
+        else {
+            throw new InvalidLocationException("Invalid location input");
+        }
     }
 
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (cityMap.isValidLocation(x, y)) {
+            cityMap.unblockCell(x, y);
+        }
+        else {
+            throw new InvalidLocationException("Invalid location input");
+        }
     }
 
     @Override
