@@ -27,6 +27,8 @@ public class CityRescueImpl implements CityRescue {
 
     private CityMap cityMap;
 
+    private int tick;
+
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
         if (width > 0 && height > 0) {
@@ -383,8 +385,50 @@ public class CityRescueImpl implements CityRescue {
     // Both
     @Override
     public void tick() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        //tick ++
+        tick++;
+        Unit[] justArrived = new Unit[MAX_UNITS];
+        boolean justArrivedTrue;
+        //move enroute units (start lowest unitid and ascend) + mark arrivals
+        for (int i = 0; i < MAX_UNITS; i++) {
+            Unit unit = units[i];
+            if (unit == null) continue; //In case of null value
+            if (unit.getStatus() == UnitStatus.EN_ROUTE) {
+                unit.move(cityMap);
+                if (unit.hasArrived()) {
+                    Incident incident = unit.getAssignedIncident();
+                    incident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
+                    unit.startWork();
+                    justArrived[i] = unit;
+                }
+            }
+        }
+        //process on scene work (aslong as they havent just got there or else they will progress 2 tick at once) + resolve completed incidents
+        for (int i = 0; i < MAX_UNITS; i++) {
+            Unit unit = units[i];
+            if (unit == null) continue;
+            if (unit.getStatus() == UnitStatus.AT_SCENE) {
+                justArrivedTrue = false;
+                for (int i2 = 0; i2 < MAX_UNITS; i2++) {
+                    if (unit == justArrived[i2]) {
+                        justArrivedTrue = true;
+                    }
+                }
+                if (justArrivedTrue == false) {
+                    unit.workATick();
+                    }
+                }
+            }
+
+        for (int i = 0; i < MAX_INCIDENTS; i++) {
+            Incident incident = incidents[i];
+            if (incident == null) continue;
+            Unit unit = incident.getAssignedUnit();
+            if ((unit.getWorkRemaining() <= 0) && (unit.getStatus() == UnitStatus.AT_SCENE)) {
+                        unit.release();
+                        incident.setIncidentStatus(IncidentStatus.RESOLVED);
+            }
+        }
     }
 
     // Both
