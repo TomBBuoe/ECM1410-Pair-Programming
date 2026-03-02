@@ -53,6 +53,11 @@ public class Station {
         this.maxUnits = newMaxUnits;
     }
 
+    //Space left in station?
+    public boolean stationFull() {
+        return (maxUnits - unitCount) == 0;
+    }
+
     //Info returning methods
     public int getStationId() {return stationId;}
     public String getStationName() {return stationName;}
@@ -60,5 +65,6 @@ public class Station {
     public int getY() {return y;}
     public int getMaxUnits() {return maxUnits;}
     public int getUnitCount() {return unitCount;}
+
 
 }
