@@ -85,14 +85,14 @@ public class CityRescueImpl implements CityRescue {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Archie
+    // Tom
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
         // TODO: implement
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Archie
+    // Tom
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
         // TODO: implement
@@ -139,7 +139,7 @@ public class CityRescueImpl implements CityRescue {
         else if (!cityMap.isLegalMove(x, y)) {
             throw new InvalidLocationException("Invalid location input");
         }
-        else if (nextFreeIncidentIndex < MAX_INCIDENTS) {
+        else if (nextFreeIncidentIndex >= MAX_INCIDENTS) {
             throw new CapacityExceededException("Incident capacity exceeded");
         }
         else {
@@ -151,37 +151,87 @@ public class CityRescueImpl implements CityRescue {
     // Tom
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
-        Incident incident = incidents[incidentId - 1];
-        if (incident == null) {
+        if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
             throw new IDNotRecognisedException("Incident ID not recognised");
         }
-        else if (incident.getIncidentStatus() != IncidentStatus.REPORTED && incident.getIncidentStatus() != IncidentStatus.DISPATCHED) {
-            throw new IllegalStateException("Incident state is illegal");
+
+        Incident incident = incidents[incidentId - 1];
+        IncidentStatus status = incident.getIncidentStatus();
+
+        if (status == IncidentStatus.DISPATCHED) {
+            incident.getAssignedUnit().release();
+            incident.setAssignedUnit(null);
+            incident.setIncidentStatus(IncidentStatus.CANCELLED);
+        }
+        else if (status == IncidentStatus.REPORTED) {
+            incident.setIncidentStatus(IncidentStatus.CANCELLED);
         }
         else {
-            // TODO: 
+            throw new IllegalStateException("Incident state is illegal");
         }
     }
 
     // Tom
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
+            throw new IDNotRecognisedException("Incident ID not recognised");
+        }
+
+        Incident incident = incidents[incidentId - 1];
+        IncidentStatus status = incident.getIncidentStatus();
+
+        if (newSeverity < 1 || 5 < newSeverity) {
+            throw new InvalidSeverityException("Invalid new serverity input");
+        }
+        else if (status == IncidentStatus.RESOLVED || status == IncidentStatus.CANCELLED) {
+            throw new IllegalStateException("Invalid incident state");
+        }
+        else {
+            incident.setSeverity(newSeverity);
+        }
     }
 
     // Tom
     @Override
     public int[] getIncidentIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int totalIncidents = 0;
+        for (Incident incident : incidents) {
+            if (incident != null) {
+                ++totalIncidents;
+            } 
+        }
+
+        int[] foundIncidentIds = new int[totalIncidents];
+        int counter = 0; 
+        for (Incident incident : incidents) {
+            if (incident != null) {
+                foundIncidentIds[counter++] = incident.getIncidentId();
+            }
+        }
+        return foundIncidentIds;
     }
 
     // Tom
     @Override
     public String viewIncident(int incidentId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
+            throw new IDNotRecognisedException("Incident ID not recognised");
+        }
+        Incident incident = incidents[incidentId - 1]; 
+        String type = incident.getIncidentType().name();
+        String severity = Integer.toString(incident.getSeverity());
+        String xLoc = Integer.toString(incident.getX());
+        String yLoc = Integer.toString(incident.getY());
+        String status = incident.getIncidentStatus().name();
+        Unit unit = incident.getAssignedUnit();
+        String unitId = "-";
+        if (unit != null) {
+            unitId = Integer.toString(unit.getUnitId());
+        }
+
+        return new String ("I#" + incidentId + " TYPE=" + type + " SEV=" + severity + " LOC=(" + xLoc + "," + yLoc + ") STATUS=" + status + " UNIT=" + unitId);
+
     }
 
     // Both

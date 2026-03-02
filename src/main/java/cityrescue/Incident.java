@@ -33,7 +33,7 @@ public class Incident {
     }
 
     public void setSeverity(int incidentSeverity) {
-        severity = incidentSeverity;
+        this.severity = incidentSeverity;
     }
 
     public int getX() {
@@ -52,10 +52,16 @@ public class Incident {
         return status;
     }
 
+    public void setIncidentStatus(IncidentStatus incidentStatus) {
+        status = incidentStatus;
+    }
+
     public Unit getAssignedUnit() {
         return assignedUnit;
     }
     
-    // TODO: Set assigned unit function
+    public void setAssignedUnit(Unit unit) {
+        this.assignedUnit = unit;
+    }
 
 }

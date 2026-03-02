@@ -46,7 +46,7 @@ public abstract class Unit {
     }
 
     //Release unit from incident
-    public void Release() {
+    public void release() {
         this.assignedIncident = null;
         this.status = UnitStatus.IDLE;
         this.workRemanining = 0;
