@@ -50,8 +50,6 @@ public class Station {
 
     //Update/set stations max unit capacity
     public void setStationCapacity(int newMaxUnits) throws InvalidCapacityException {
-        if (newMaxUnits < unitCount) throw new InvalidCapacityException("New unit max is less then current unit number");
-
         this.maxUnits = newMaxUnits;
     }
 

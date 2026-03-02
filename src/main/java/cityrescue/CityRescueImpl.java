@@ -96,15 +96,37 @@ public class CityRescueImpl implements CityRescue {
     // Tom
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) {
+            throw new IDNotRecognisedException("Station ID not recognised");
+        }
+
+        int unitCount = stations[stationId - 1].getUnitCount();
+        if (maxUnits < unitCount || maxUnits <= 0) {
+            throw new InvalidCapacityException("New unit max is less then current unit number");
+        }
+        else {
+            stations[stationId - 1].setStationCapacity(maxUnits);
+        }
     }
 
     // Tom
     @Override
     public int[] getStationIds() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int totalStations = 0;
+        for (Station station : stations) {
+            if (station != null) {
+                ++totalStations;
+            } 
+        }
+
+        int[] foundStationIds = new int[totalStations];
+        int counter = 0; 
+        for (Station station : stations) {
+            if (station != null) {
+                foundStationIds[counter++] = station.getStationId();
+            }
+        }
+        return foundStationIds;
     }
 
     // Archie
@@ -168,7 +190,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+    
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
         if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
@@ -191,7 +213,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+    
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
         if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
@@ -212,7 +234,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+    
     @Override
     public int[] getIncidentIds() {
         int totalIncidents = 0;
@@ -232,7 +254,7 @@ public class CityRescueImpl implements CityRescue {
         return foundIncidentIds;
     }
 
-    // Tom
+    
     @Override
     public String viewIncident(int incidentId) throws IDNotRecognisedException {
         if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
