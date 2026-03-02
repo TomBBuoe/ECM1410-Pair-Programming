@@ -1,5 +1,7 @@
 package cityrescue;
 
+import javax.naming.InvalidNameException;
+
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
 
@@ -17,6 +19,10 @@ public class CityRescueImpl implements CityRescue {
     final int MAX_UNITS = 50;
     final int MAX_INCIDENTS = 200;
 
+    private Station[] stations = new Station[MAX_STATIONS];
+    private int nextFreeStationIndex = 0;
+    private Unit[] units = new Unit[MAX_UNITS];
+    private int nextFreeUnitIndex = 0;
     private Incident[] incidents = new Incident[MAX_INCIDENTS];
     private int nextFreeIncidentIndex = 0;
 
@@ -57,42 +63,49 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Archie
+    // Tom
     @Override
     public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
-        // TODO: implement 
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (name == null) {
+            throw new InvalidNameException("Station name cannot be null");
+        }
+        else if (!cityMap.isLegalMove(x, y)) {
+            throw new InvalidLocationException("Location of station invalid");
+        }
+        else {
+            stations[nextFreeStationIndex] = new Station(nextFreeStationIndex + 1, name, x, y);
+            return ++nextFreeStationIndex;
+        }
     }
 
-    // Archie
+    // Tom
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
         // TODO: implement
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Archie
+    // Tom
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
         // TODO: implement
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Archie
+    // Tom
     @Override
     public int[] getStationIds() {
         // TODO: implement
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Tom
+    // Archie
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
         // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Tom
+    // Archie
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
         // TODO: implement
@@ -106,25 +119,24 @@ public class CityRescueImpl implements CityRescue {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Tom
+    // Archie
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
         // TODO: implement
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Tom
+    // Archie
     @Override
     public int[] getUnitIds() {
-        // TODO: implement
+        // TODO: implement CAN USE SAME LOGIC AS getIncidentIds()
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    // Tom
+    // Archie
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+
     }
 
     @Override
