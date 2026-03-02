@@ -171,8 +171,8 @@ public class CityRescueImpl implements CityRescue {
     // Archie
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
-        if (units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
-        if (stations[newStationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
+        if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
+        if (newStationId < 1 || newStationId > MAX_STATIONS || stations[newStationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
         Unit unit = units[unitId - 1];
         Station station = stations[newStationId - 1];
         Station oldStation = stations[unit.getHomeStationId() - 1];
