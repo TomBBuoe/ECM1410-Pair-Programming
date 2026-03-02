@@ -62,7 +62,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+
     @Override
     public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
         if (name == null || name.trim() == null) {
@@ -80,7 +80,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) {
@@ -94,7 +94,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) {
@@ -110,7 +110,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Tom
+
     @Override
     public int[] getStationIds() {
         int totalStations = 0;
@@ -130,7 +130,7 @@ public class CityRescueImpl implements CityRescue {
         return foundStationIds;
     }
 
-    // Archie
+
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
@@ -157,7 +157,7 @@ public class CityRescueImpl implements CityRescue {
         return ++nextFreeUnitIndex;
     }
 
-    // Archie
+
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
@@ -168,7 +168,7 @@ public class CityRescueImpl implements CityRescue {
         units[unitId - 1] = null;
     }
 
-    // Archie
+
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
@@ -184,7 +184,7 @@ public class CityRescueImpl implements CityRescue {
         unit.setPosition(station.getX(), station.getY());
     }
 
-    // Archie
+
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) {
@@ -210,7 +210,7 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Archie
+
     @Override
     public int[] getUnitIds() {
         int totalUnits = 0;
@@ -230,7 +230,7 @@ public class CityRescueImpl implements CityRescue {
         return foundUnitIds;
     }
 
-    // Archie
+
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) {
@@ -363,22 +363,30 @@ public class CityRescueImpl implements CityRescue {
     @Override
     public void dispatch() {
         int[] incidentIds = getIncidentIds();
-        int[] unitIds = getUnitIds();
 
         for (int incidentId : incidentIds) {
             Incident incident = incidents[incidentId - 1];
             if (incident.getIncidentStatus() == IncidentStatus.REPORTED) {
-                for (int unitId : unitIds) {
-                    Unit unit = units[unitId];
+                int smallestDistance = 999999;
+                Unit bestUnit = null;
+                for (Unit unit : units) {
+                    if (unit == null) continue;
                     if (unit.getStatus() == UnitStatus.IDLE && unit.canHandle(incident.getIncidentType())) {
-
+                        int distanceToIncident = Math.abs(incident.getX() - unit.getUnitX()) + Math.abs(incident.getY() - unit.getUnitY());
+                        if (distanceToIncident < smallestDistance) {
+                            smallestDistance = distanceToIncident;
+                            bestUnit = unit;
+                        }
                     }
+                }
+                if (bestUnit != null) {
+                    incident.setIncidentStatus(IncidentStatus.DISPATCHED);
+                    incident.setAssignedUnit(bestUnit);
+                    bestUnit.assignIncident(incident);
                 }
             }
         }
-
-
-        }
+    }
 
     // Both
     @Override
