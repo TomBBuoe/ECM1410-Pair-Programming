@@ -132,7 +132,9 @@ public class CityRescueImpl implements CityRescue {
         return foundStationIds;
     }
 
-
+/**
+ * Creates a new unit and assigns it to a station
+ */
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
@@ -369,7 +371,7 @@ public class CityRescueImpl implements CityRescue {
         for (int incidentId : incidentIds) {
             Incident incident = incidents[incidentId - 1];
             if (incident.getIncidentStatus() == IncidentStatus.REPORTED) {
-                int smallestDistance = 999999;
+                int smallestDistance = 999999; // Use arbitrary large number to compare to
                 Unit bestUnit = null;
                 for (Unit unit : units) {
                     if (unit == null) continue;
@@ -381,7 +383,7 @@ public class CityRescueImpl implements CityRescue {
                         }
                     }
                 }
-                if (bestUnit != null) {
+                if (bestUnit != null) { // Can use best unit as the lowest ID unit will be the first to be found, and so automatically the tie break will be implemented
                     incident.setIncidentStatus(IncidentStatus.DISPATCHED);
                     incident.setAssignedUnit(bestUnit);
                     bestUnit.assignIncident(incident);
