@@ -63,7 +63,7 @@ public abstract class Unit {
             return;
         }
 
-        int endX = assignedIncident.getx();
+        int endX = assignedIncident.getX();
         int endY = assignedIncident.getY();
 
         int[][] directions = {{0, -1},{1, 0},{0, 1},{-1, 0}}; //N? E S? W
@@ -74,7 +74,7 @@ public abstract class Unit {
         for (int[] d : directions) {
             int newX = this.unitX + d[0];
             int newY = this.unitY + d[1];
-            if (map.isLegalLocation(newX, newY)) {
+            if (map.isLegalMove(newX, newY)) {
                 int newDistanceTo = manhattan(newX, newY);
                 if (newDistanceTo < distanceTo) {
                     this.unitX = newX;
@@ -88,7 +88,7 @@ public abstract class Unit {
         for (int[] d : directions) {
             int newX = this.unitX + d[0];
             int newY = this.unitY + d[1];
-            if (map.isLegalLocation(newX, newY)) {
+            if (map.isLegalMove(newX, newY)) {
                 this.unitX = newX;
                 this.unitY = newY;
                 return;
@@ -100,14 +100,14 @@ public abstract class Unit {
     //Track arrival to goal
     public boolean hasArrived() {
         if (assignedIncident == null) return false;
-        return ((this.unitX == assignedIncident.getx()) && (this.unitY == assignedIncident.getY()));
+        return ((this.unitX == assignedIncident.getX()) && (this.unitY == assignedIncident.getY()));
     }
 
     //Start the unit working on the incident
     public void startWork() {
         if (assignedIncident == null) return;
         this.status = UnitStatus.AT_SCENE;
-        this.workRemanining = getTicksToResolve(assignedIncident.getseverity());
+        this.workRemanining = getTicksToResolve(assignedIncident.getSeverity());
     }
 
     //Removes a tick every call untill 0 ticks remain and it returns true
