@@ -90,7 +90,7 @@ public class CityRescueImpl implements CityRescue {
      */
     @Override
     public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
-        if (name == null || name.trim() == "") {
+        if (name == null || name.trim().isEmpty()) {
             throw new InvalidNameException("Station name cannot be null");
         }
         else if (!cityMap.isLegalMove(x, y)) {
@@ -315,7 +315,7 @@ public class CityRescueImpl implements CityRescue {
             incidentId = Integer.toString(incident.getIncidentId());
         }
         String workTicks = Integer.toString(unit.getTicksAtScene());
-        if (workTicks == "0") {
+        if (unit.getTicksAtScene() == 0) {
             return new String ("U#" + unitId + " TYPE=" + type + " HOME=" + home + " LOC=(" + xLoc + "," + yLoc + ") STATUS=" + status + " INCIDENT=" + incidentId);
         }
         else {
