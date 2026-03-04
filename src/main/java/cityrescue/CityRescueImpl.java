@@ -425,20 +425,16 @@ public class CityRescueImpl implements CityRescue {
                     }
                 }
                 if (justArrivedTrue == false) {
-                    unit.workATick();
+                    boolean finishedWork = unit.workATick();
+                    if (finishedWork) {
+                        Incident incident = unit.getAssignedIncident();
+                        incident.setIncidentStatus(IncidentStatus.RESOLVED);
+                        unit.release();
                     }
+                    }
+                
                 }
             }
-
-        for (int i = 0; i < MAX_INCIDENTS; i++) {
-            Incident incident = incidents[i];
-            if (incident == null || incident.getIncidentStatus() == IncidentStatus.REPORTED) continue;
-            Unit unit = incident.getAssignedUnit();
-            if ((unit.getWorkRemaining() <= 0) && (unit.getStatus() == UnitStatus.AT_SCENE)) {
-                        unit.release();
-                        incident.setIncidentStatus(IncidentStatus.RESOLVED);
-            }
-        }
     }
 
     // Both
