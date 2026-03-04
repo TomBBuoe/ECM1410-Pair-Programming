@@ -513,6 +513,8 @@ public class CityRescueImpl implements CityRescue {
     public void tick() {
         //tick++
         tick++;
+        Unit[] justArrived = new Unit[MAX_UNITS];
+        boolean justArrivedTrue;
         //move enroute units (start lowest unitid and ascend) + mark arrivals
         for (int i = 0; i < MAX_UNITS; i++) {
             Unit unit = units[i];
@@ -523,10 +525,11 @@ public class CityRescueImpl implements CityRescue {
                     Incident incident = unit.getAssignedIncident();
                     incident.setIncidentStatus(IncidentStatus.IN_PROGRESS);
                     unit.startWork();
+                    justArrived[i] = unit;
                 }
             }
         }
-
+    
 
 
         //process on scene work (aslong as they havent just got there or else they will progress 2 tick at once) + resolve completed incidents
@@ -534,14 +537,22 @@ public class CityRescueImpl implements CityRescue {
             Incident incident = incidents[i];
             if (incident == null) continue;
             if (incident.getIncidentStatus() == IncidentStatus.IN_PROGRESS) {
-                Unit unit = incident.getAssignedUnit();
-                boolean finishedWork = unit.workATick();
+                justArrivedTrue = false;
+                for (int i2 = 0; i2 < MAX_UNITS; i2++) {
+                    if (incident.getAssignedUnit() == justArrived[i2]) {
+                        justArrivedTrue = true;
+                    }
+                }
+                if (justArrivedTrue == false) {
+                    Unit unit = incident.getAssignedUnit();
+                    boolean finishedWork = unit.workATick();
                 if (finishedWork) {
                     incident.setIncidentStatus(IncidentStatus.RESOLVED);
                     unit.release();
                 }
             }
         }   
+    }
     }
 
     /** 
