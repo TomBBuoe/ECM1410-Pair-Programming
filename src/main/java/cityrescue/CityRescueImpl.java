@@ -20,7 +20,7 @@ public class CityRescueImpl implements CityRescue {
 
     private CityMap cityMap;
 
-    private int tick;
+    private int tick = 0;
 
     /**
      * Creates simulation grid
@@ -32,6 +32,13 @@ public class CityRescueImpl implements CityRescue {
     public void initialise(int width, int height) throws InvalidGridException {
         if (width > 0 && height > 0) {
             this.cityMap = new CityMap(width, height);
+            stations = new Station[MAX_STATIONS];
+            nextFreeStationIndex = 0;
+            units = new Unit[MAX_UNITS];
+            nextFreeUnitIndex = 0;
+            incidents = new Incident[MAX_INCIDENTS];
+            nextFreeIncidentIndex = 0;
+            tick = 0
         }
         else {
             throw new InvalidGridException("Input grid dimensions invalid");
