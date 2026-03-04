@@ -444,7 +444,42 @@ public class CityRescueImpl implements CityRescue {
     // Both
     @Override
     public String getStatus() {
-        // TODO: implement
-        throw new UnsupportedOperationException("Not implemented yet");
+        int stationCount = 0;
+        int unitCount = 0;
+        int incidentCount = 0;
+        int obstacleCount = 0;
+        String report = "";
+        for (int i = 0; i < MAX_STATIONS; i++) {
+            Station station = stations[i];
+            if (station != null) {stationCount += 1;}
+        }
+        for (int i = 0; i < MAX_UNITS; i++) {
+            Unit unit = units[i];
+            if (unit != null) {unitCount += 1;}
+        }
+        for (int i = 0; i < MAX_INCIDENTS; i++) {
+            Incident incident = incidents[i];
+            if (incident != null) {incidentCount += 1;}
+        }
+        for (int x = 0; x < cityMap.getWidth(); x++) {
+            for (int y = 0; y < cityMap.getHeight(); y++) {
+                if (cityMap.isBlocked(x, y)) {
+                    obstacleCount += 1;
+                }
+            }
+        }
+        report = report + ("TICK=" + tick + "\n" + "STATIONS=" + stationCount + " UNITS=" + unitCount + " INCIDENTS=" + incidentCount + " OBSTACLES=" + obstacleCount + "\n" + "INCIDENTS");
+        for (int i = 0; i < MAX_INCIDENTS; i++) {
+            if (incidents[i] != null) {
+                report = report + ("\n" + viewIncident((incidents[i]).getIncidentId()));
+            }
+        }
+        report = report + ("\n" + "UNITS");
+        for (int i = 0; i < MAX_UNITS; i++) {
+            if (units[i] != null) {
+                report = report + ("\n" + viewUnit((units[i]).getUnitId()));
+            }
+        }
+        return report;
     }
 }
