@@ -38,7 +38,7 @@ public class CityRescueImpl implements CityRescue {
             nextFreeUnitIndex = 0;
             incidents = new Incident[MAX_INCIDENTS];
             nextFreeIncidentIndex = 0;
-            tick = 0
+            tick = 0;
         }
         else {
             throw new InvalidGridException("Input grid dimensions invalid");
