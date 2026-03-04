@@ -3,7 +3,22 @@ package cityrescue;
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
 
-//Will need to change refrence to unit class to correct names once unit complete
+/**
+ * Station class 
+ * 
+ * Methods:
+ * Station()
+ * addUnit()
+ * removeUnit()
+ * setStationCapacity()
+ * stationFull()
+ * getStationId()
+ * getStationName()
+ * getX()
+ * getY()
+ * getMaxUnits()
+ * getUnitCount()
+ */
 
 public class Station {
     private int stationId;
@@ -67,3 +82,4 @@ public class Station {
 
 
 }
+

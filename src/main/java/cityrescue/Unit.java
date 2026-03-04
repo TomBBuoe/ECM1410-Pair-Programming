@@ -3,7 +3,14 @@ package cityrescue;
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
 
-//Need to change refrences to Incident (and other classes (CityMap)) to correct names once classes done
+/**
+ * Abstract unit class
+ * Used for Ambulance, FireEngine and PoliceCar
+ * 
+ * Abstract methods:
+ * canHandle
+ * getTicksToResolve
+ */
 
 public abstract class Unit {
     private int unitId;
@@ -58,7 +65,18 @@ public abstract class Unit {
         return Math.abs(this.unitX - endX) + Math.abs(this.unitY - endY);
     }
 
-    //Move the unit (May need changing depending on CityMap class)
+    /**
+     * Moves unit
+     * 
+     * Uses following movement rules in order to select move:
+     * List the four candidiate moves in order (N, E, S, W)
+     * Ignore moves that go out of bounds or into a blocked cell
+     * Take the first legal move that reduces Manhattan distance to the target
+     * If none reduce distance, take the first legal move in N, E, S, W order
+     * If no legal move exists, the unit stays put this tick
+     * 
+     * @param map Grid simulating city
+     */
     public void move(CityMap map) {
         if (status != UnitStatus.EN_ROUTE || assignedIncident == null) {
             return;
@@ -67,7 +85,7 @@ public abstract class Unit {
         int endX = assignedIncident.getX();
         int endY = assignedIncident.getY();
 
-        int[][] directions = {{0, -1},{1, 0},{0, 1},{-1, 0}}; //N? E S? W
+        int[][] directions = {{0, -1},{1, 0},{0, 1},{-1, 0}}; //N E S W
 
         int distanceTo = manhattan(endX, endY);
 
@@ -162,5 +180,7 @@ public abstract class Unit {
 
 
 }
+
+
 
 
