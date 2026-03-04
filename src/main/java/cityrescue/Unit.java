@@ -3,8 +3,6 @@ package cityrescue;
 import cityrescue.enums.*;
 import cityrescue.exceptions.*;
 
-//Need to change refrences to Incident (and other classes (CityMap)) to correct names once classes done
-
 public abstract class Unit {
     private int unitId;
     private UnitType unitType;
@@ -58,7 +56,7 @@ public abstract class Unit {
         return Math.abs(this.unitX - endX) + Math.abs(this.unitY - endY);
     }
 
-    //Move the unit (May need changing depending on CityMap class)
+    //Move the unit
     public void move(CityMap map) {
         if (status != UnitStatus.EN_ROUTE || assignedIncident == null) {
             return;
@@ -162,5 +160,6 @@ public abstract class Unit {
 
 
 }
+
 
 
