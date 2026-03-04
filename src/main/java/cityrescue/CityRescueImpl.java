@@ -363,7 +363,14 @@ public class CityRescueImpl implements CityRescue {
 
     }
 
-    // Both
+    /**
+     * Assigns best eligible unit to reported incidents
+     * 
+     * Uses the following tie-breakers in this order to choose optimal unit:
+     * Shortest Manhattan distance
+     * If last tied: lowest unitId
+     * If last tied: lowest homeStationId 
+     */
     @Override
     public void dispatch() {
         int[] incidentIds = getIncidentIds();
@@ -392,10 +399,18 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    // Both
+    /**
+     * Advances the simulation forward a tick
+     * 
+     * Manages the following in this order:
+     * Moves units (In ascending unitId)
+     * Marks arrivals
+     * processes on-scene work
+     * resolves completed incidents (In ascending incidentId)
+     */
     @Override
     public void tick() {
-        //tick ++
+        //tick++
         tick++;
         Unit[] justArrived = new Unit[MAX_UNITS];
         boolean justArrivedTrue;
@@ -413,7 +428,7 @@ public class CityRescueImpl implements CityRescue {
                 }
             }
         }
-        //process on scene work (aslong as they havent just got there or else they will progress 2 tick at once) + resolve completed incidents
+        //process on scene work (aslong as they havent just got there or else they will progress 2 ticks at once) + resolve completed incidents
         for (int i = 0; i < MAX_UNITS; i++) {
             Unit unit = units[i];
             if (unit == null) continue;
@@ -437,7 +452,17 @@ public class CityRescueImpl implements CityRescue {
             }
     }
 
-    // Both
+    /** 
+     * Returns a formatted report on the current state of the program
+     * 
+     * The report includes:
+     * Current tick 
+     * tally of stations, units, incidents and obstacles
+     * All current incidents details
+     * All current units details
+     * 
+     * @return String variable holding current state of program
+    */
     @Override
     public String getStatus() {
         int stationCount = 0;
