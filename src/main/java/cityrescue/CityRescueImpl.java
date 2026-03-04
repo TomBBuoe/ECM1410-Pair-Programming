@@ -471,13 +471,19 @@ public class CityRescueImpl implements CityRescue {
         report = report + ("TICK=" + tick + "\n" + "STATIONS=" + stationCount + " UNITS=" + unitCount + " INCIDENTS=" + incidentCount + " OBSTACLES=" + obstacleCount + "\n" + "INCIDENTS");
         for (int i = 0; i < MAX_INCIDENTS; i++) {
             if (incidents[i] != null) {
-                report = report + ("\n" + viewIncident((incidents[i]).getIncidentId()));
+                try {
+                    report = report + ("\n" + viewIncident((incidents[i]).getIncidentId()));
+                }
+                catch (IDNotRecognisedException exception) {}
             }
         }
         report = report + ("\n" + "UNITS");
         for (int i = 0; i < MAX_UNITS; i++) {
             if (units[i] != null) {
-                report = report + ("\n" + viewUnit((units[i]).getUnitId()));
+                try {
+                    report = report + ("\n" + viewUnit((units[i]).getUnitId()));
+                }
+                catch (IDNotRecognisedException exception) {}
             }
         }
         return report;
