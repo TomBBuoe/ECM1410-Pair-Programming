@@ -94,7 +94,7 @@ public abstract class Unit {
             int newX = this.unitX + d[0];
             int newY = this.unitY + d[1];
             if (map.isLegalMove(newX, newY)) {
-                int newDistanceTo = manhattan(newX, newY);
+                int newDistanceTo = Math.abs(newX - endX) + Math.abs(newY - endY);
                 if (newDistanceTo < distanceTo) {
                     this.unitX = newX;
                     this.unitY = newY;
@@ -133,14 +133,8 @@ public abstract class Unit {
     public boolean workATick() {
         if (status != UnitStatus.AT_SCENE) return false;
         workRemanining--;
-        if (workRemanining == 0) {
-            ticksAtScene = 0;
-            return true;
-        }
-        else {
-            ticksAtScene++;
-            return false;
-        }
+        ticksAtScene++;
+        return (workRemanining == 0);
     }
 
     //Put a unit out of service
