@@ -341,7 +341,12 @@ public class CityRescueImpl implements CityRescue {
         return foundIncidentIds;
     }
 
-    
+    /**
+     * Produces incidents information
+     * 
+     * @param incidentId
+     * @return String holding incident information
+     */
     @Override
     public String viewIncident(int incidentId) throws IDNotRecognisedException {
         if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
