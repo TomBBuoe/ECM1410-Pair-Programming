@@ -4,15 +4,8 @@ import cityrescue.enums.*;
 import cityrescue.exceptions.*;
 import cityrescue.UnitTypes.*;
 
-/**
- * CityRescueImpl (Starter)
- *
- * Your task is to implement the full specification.
- * You may add additional classes in any package(s) you like.
- */
-public class CityRescueImpl implements CityRescue {
 
-    // TODO: add fields (map, arrays for stations/units/incidents, counters, tick, etc.)
+public class CityRescueImpl implements CityRescue {
 
     final int MAX_STATIONS = 20;
     final int MAX_UNITS = 50;
@@ -29,6 +22,12 @@ public class CityRescueImpl implements CityRescue {
 
     private int tick;
 
+    /**
+     * Creates simulation grid
+     * 
+     * @param width grid width
+     * @param width height
+     */
     @Override
     public void initialise(int width, int height) throws InvalidGridException {
         if (width > 0 && height > 0) {
@@ -39,11 +38,22 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
+    /** 
+     * Returns grid dimensions
+     * 
+     * @return grid dimensions
+     */
     @Override
     public int[] getGridSize() {
         return new int[]{cityMap.getWidth(), cityMap.getHeight()};
     }
 
+    /**
+     * Creates obstacle in specified location
+     * 
+     * @param x Obstacle x coordinate
+     * @param y Obstacle y coordinate
+     */
     @Override
     public void addObstacle(int x, int y) throws InvalidLocationException {
         if (cityMap.isValidLocation(x, y)) {
@@ -54,6 +64,12 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
+    /**
+     * Removes obstacle from grid
+     * 
+     * @param x Obstacle x coordinate
+     * @param y Obstacle y coordinate
+     */
     @Override
     public void removeObstacle(int x, int y) throws InvalidLocationException {
         if (cityMap.isValidLocation(x, y)) {
@@ -64,7 +80,14 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-
+    /**
+     * Creates station of specified name and location
+     * 
+     * @param name Station name
+     * @param x Station x coordinate
+     * @param y Station y coordinate
+     * @return nextFreeStationIndex Incremented record of next free station index
+     */
     @Override
     public int addStation(String name, int x, int y) throws InvalidNameException, InvalidLocationException {
         if (name == null || name.trim() == null) {
@@ -82,7 +105,12 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-
+    /**
+     * Removes station
+     * Station must have no units to be eligible
+     * 
+     * @param stationId station ID
+     */
     @Override
     public void removeStation(int stationId) throws IDNotRecognisedException, IllegalStateException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) {
@@ -96,7 +124,12 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-
+    /**
+     * Updates stations unit capacity
+     * 
+     * @param stationId Station ID
+     * @param maxUnits Stations new unit capacity
+     */
     @Override
     public void setStationCapacity(int stationId, int maxUnits) throws IDNotRecognisedException, InvalidCapacityException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) {
@@ -112,7 +145,11 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-
+    /**
+     * Returns list of station IDs (ascending order)
+     * 
+     * @return foundStationIds List of station IDs
+     */
     @Override
     public int[] getStationIds() {
         int totalStations = 0;
@@ -132,9 +169,12 @@ public class CityRescueImpl implements CityRescue {
         return foundStationIds;
     }
 
-/**
- * Creates a new unit and assigns it to a station
- */
+    /**
+    * Creates a new unit and assigns it to a station
+    * 
+    * @param stationId Station ID
+    * @param type Unit type
+    */
     @Override
     public int addUnit(int stationId, UnitType type) throws IDNotRecognisedException, InvalidUnitException, IllegalStateException {
         if (stationId < 1 || stationId > MAX_STATIONS || stations[stationId - 1] == null) throw new IDNotRecognisedException("Station ID not recognised");
@@ -161,7 +201,11 @@ public class CityRescueImpl implements CityRescue {
         return ++nextFreeUnitIndex;
     }
 
-
+    /**
+     * Removes unit
+     * 
+     * @param unitId unit ID
+     */
     @Override
     public void decommissionUnit(int unitId) throws IDNotRecognisedException, IllegalStateException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
@@ -172,7 +216,12 @@ public class CityRescueImpl implements CityRescue {
         units[unitId - 1] = null;
     }
 
-
+    /**
+     * Updates units home station, sets unit location to home station
+     * 
+     * @param unitId Unit ID
+     * @param newStationId Updated home station ID
+     */
     @Override
     public void transferUnit(int unitId, int newStationId) throws IDNotRecognisedException, IllegalStateException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) throw new IDNotRecognisedException("Unit ID not recognised");
@@ -188,7 +237,12 @@ public class CityRescueImpl implements CityRescue {
         unit.setPosition(station.getX(), station.getY());
     }
 
-
+    /**
+     * Sets unit status to OUT_OF_SERVICE or IDLE
+     * 
+     * @param unitId unit ID
+     * @param outOfService boolean value, dictates which status unit is set to
+     */
     @Override
     public void setUnitOutOfService(int unitId, boolean outOfService) throws IDNotRecognisedException, IllegalStateException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) {
@@ -214,7 +268,11 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-
+    /**
+     * Returns list of unit IDs in ascending order
+     * 
+     * @return foundUnitIds List of unit ids
+     */
     @Override
     public int[] getUnitIds() {
         int totalUnits = 0;
@@ -234,7 +292,12 @@ public class CityRescueImpl implements CityRescue {
         return foundUnitIds;
     }
 
-
+    /**
+     * Produces unit information
+     * 
+     * @param unitId units ID
+     * @return String holding unit information
+     */
     @Override
     public String viewUnit(int unitId) throws IDNotRecognisedException {
         if (unitId < 1 || unitId > MAX_UNITS || units[unitId - 1] == null) {
@@ -256,6 +319,15 @@ public class CityRescueImpl implements CityRescue {
         return new String ("U#" + unitId + " TYPE=" + type + " HOME=" + home + " LOC=(" + xLoc + "," + yLoc + ") STATUS=" + status + " INCIDENT=" + incidentId + " WORK=" + workTicks);
     }
 
+    /**
+     * Creates new incident of specified type, severity and location
+     * 
+     * @param type Incident type
+     * @param severity Incident severity
+     * @param x Incident x coordinate
+     * @param y Incident y coordinate
+     * @return nextFreeIncidentIndex incremented record of next free incident index
+     */
     @Override
     public int reportIncident(IncidentType type, int severity, int x, int y) throws InvalidSeverityException, InvalidLocationException {
 
@@ -277,7 +349,11 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    
+    /**
+     * Cancels an incident
+     * 
+     * @param incidentId incident ID
+     */
     @Override
     public void cancelIncident(int incidentId) throws IDNotRecognisedException, IllegalStateException {
         if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
@@ -300,7 +376,12 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    
+    /**
+     * Escalates incidents severity
+     * 
+     * @param incidentId incident ID
+     * @param newSeverity new severity level
+     */
     @Override
     public void escalateIncident(int incidentId, int newSeverity) throws IDNotRecognisedException, InvalidSeverityException, IllegalStateException {
         if (incidentId < 1 || incidentId > MAX_INCIDENTS || incidents[incidentId - 1] == null) {
@@ -321,7 +402,11 @@ public class CityRescueImpl implements CityRescue {
         }
     }
 
-    
+    /**
+     * Returns list of incident IDs in ascending order
+     * 
+     * @return foundIncidentIds List of incident ids
+     */
     @Override
     public int[] getIncidentIds() {
         int totalIncidents = 0;
@@ -342,9 +427,9 @@ public class CityRescueImpl implements CityRescue {
     }
 
     /**
-     * Produces incidents information
+     * Produces incident information
      * 
-     * @param incidentId
+     * @param incidentId incident ID
      * @return String holding incident information
      */
     @Override
